@@ -1,6 +1,6 @@
 variable "inbound_port_production_ec2" {
   type        = list(any)
-  default     = [22, 8080, 80]
+  default     = [22, 443, 80]
   description = "inbound port allow on production node"
 }
 
