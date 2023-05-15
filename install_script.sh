@@ -18,40 +18,30 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo apt  install docker-compose -y
 sudo systemctl enable docker
 sudo systemctl start docker
-sudo apt  install awscli -y
-sudo apt install unzip -y
-sudo mkdir kemane
-cd kemane/
-sudo aws s3 cp s3://kemane-website/20230409_kemanedonfackcom09042023_064dadd32881b3743211_20230513153151_archive.zip ./
-sudo aws s3 cp s3://kemane-website/installer.php ./
-
+echo ${aws_db_instance.rds_master.password} > readme1.txt
+echo ${aws_db_instance.rds_master.username} > readme2.txt
+echo ${aws_db_instance.rds_master.endpoint} > readme3.txt
 # create Dockerfile
-sudo cat <<EOF > Dockerfile
-# Use the official WordPress image as the base
-FROM wordpress:latest
+sudo cat <<EOF | sudo tee docker-compose.yml > /dev/null
+version: '3'
 
-# Set the working directory in the container
-WORKDIR /var/www/html
+services:
+  wordpress:
+   image: wordpress:4.8-apache
+   ports:
+    - 80:80
+   environment:
+     WORDPRESS_DB_USER: ${aws_db_instance.rds_master.username}
+     WORDPRESS_DB_HOST: ${aws_db_instance.rds_master.endpoint}
+     WORDPRESS_DB_PASSWORD: ${aws_db_instance.rds_master.password}
+   volumes:
+     - wordpress-data:/var/wwww/html
 
-# Copy the application files to the container
-COPY 20230409_kemanedonfackcom09042023_064dadd32881b3743211_20230513153151_archive.zip /var/www/html/
-COPY installer.php /var/www/html/
-
-# Install additional PHP extensions if needed
-RUN docker-php-ext-install mysqli
-
-# Set the ownership of the WordPress files
-RUN chown -R www-data:www-data /var/www/html
-
-# Expose port 80
-EXPOSE 80
-
-# Start the Apache web server
-CMD ["apache2-foreground"]
+volumes:
+  wordpress-data:
 EOF
-sudo docker build -t wordpress .
-sudo docker run -d -p 8080:80 wordpress
 
+sudo docker-compose up
 
 # install terraform
 

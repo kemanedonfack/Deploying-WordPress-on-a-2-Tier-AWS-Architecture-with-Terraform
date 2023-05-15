@@ -1,6 +1,6 @@
 variable "inbound_port_production_ec2" {
   type        = list(any)
-  default     = [22, 8080, 80]
+  default     = [22, 80]
   description = "inbound port allow on production node"
 }
 
@@ -16,7 +16,6 @@ variable "db_user" {
 
 variable "db_password" {
   type      = string
-  sensitive = true
   default   = "Kemane-AWS2023"
 }
 
@@ -53,5 +52,5 @@ variable "subnet_cidrs" {
 
 variable "target_application_port" {
   type    = string
-  default = "8080"
+  default = "80"
 }

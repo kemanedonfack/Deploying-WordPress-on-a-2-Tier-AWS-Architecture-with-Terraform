@@ -14,10 +14,6 @@ output "rds_username" {
   value = aws_db_instance.rds_master.username
 }
 
-output "rds_password" {
-  value     = aws_db_instance.rds_master.password
-  sensitive = true
-}
 
 output "rds_name" {
   value = aws_db_instance.rds_master.db_name
