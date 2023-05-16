@@ -304,6 +304,7 @@ The resources defined in this file are:
 
 ## Step 4: Create Application load balancer
 
+create `loadbalancer.tf` file and add the below content
 ```
 # Creation of application LoadBalancer
 resource "aws_lb" "application_loadbalancer" {
@@ -366,3 +367,156 @@ The resources defined in this file are:
 
 - **aws_lb_listener "external-elb"**: This resource attaches the target group to the load balancer's listener. It specifies the load balancer ARN, port, and protocol. The default_action block defines the action to be performed for incoming requests, which is forwarding to the target group.
 
+
+## Step 5: Create EC2 Instances and RDS databases
+
+create `main.tf` file and add the below content
+
+```
+resource "aws_instance" "production_1_instance" {
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.ec2_1_public_subnet.id
+  vpc_security_group_ids = [aws_security_group.production-instance-sg.id]
+  key_name               = var.key_name
+  user_data              = file("install_script.sh")
+  tags = {
+    Name = "Production instance 1"
+  }
+  depends_on = [
+    aws_db_instance.rds_master,
+  ]
+}
+
+resource "aws_instance" "production_2_instance" {
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.ec2_2_public_subnet.id
+  vpc_security_group_ids = [aws_security_group.production-instance-sg.id]
+  key_name               = var.key_name
+  user_data              = file("install_script.sh")
+  tags = {
+    Name = "Production instance 2"
+  }
+  depends_on = [
+    aws_db_instance.rds_master,
+  ]
+}
+
+resource "aws_db_subnet_group" "database_subnet" {
+  name       = "db subnet"
+  subnet_ids = [aws_subnet.database_private_subnet.id, aws_subnet.database_read_replica_private_subnet.id]
+}
+
+data "aws_kms_key" "by_id" {
+  key_id = "2de55688-7b1f-4830-85aa-385fecca2b1f" # KMS key associated with the CEV
+}
+
+resource "aws_db_instance" "rds_master" {
+  identifier              = "master-rds-instance"
+  allocated_storage       = 10
+  engine                  = "mysql"
+  engine_version          = "5.7.37"
+  instance_class          = "db.t3.micro"
+  db_name                 = var.db_name
+  username                = var.db_user
+  password                = var.db_password
+  kms_key_id              = data.aws_kms_key.by_id.arn
+  backup_retention_period = 7
+  multi_az                = false
+  availability_zone       = var.availability_zone[2]
+  db_subnet_group_name    = aws_db_subnet_group.database_subnet.id
+  skip_final_snapshot     = true
+  vpc_security_group_ids  = [aws_security_group.database-sg.id]
+  storage_encrypted       = true
+
+  tags = {
+    Name = "my-rds-master"
+  }
+}
+
+resource "aws_db_instance" "rds_replica" {
+
+  replicate_source_db    = aws_db_instance.rds_master.identifier
+  instance_class         = "db.t3.micro"
+  identifier             = "replica-rds-instance"
+  allocated_storage      = 10
+  skip_final_snapshot    = true
+  multi_az               = false
+  availability_zone      = var.availability_zone[1]
+  vpc_security_group_ids = [aws_security_group.database-sg.id]
+  storage_encrypted      = true
+
+  tags = {
+    Name = "my-rds-replica"
+  }
+
+}
+```
+
+The `main.tf` file contains the main configuration for creating various AWS resources using Terraform. It defines the resources for EC2 instances, RDS instances, and a database subnet group.
+
+The resources defined in this file are:
+
+- **aws_instance "production_1_instance" and "production_2_instance"**: These resources define the EC2 instances for production. They specify the Amazon Machine Image (AMI), instance type, subnet ID, security group ID, key name for SSH access, user data script, and tags. The instances depend on the availability of the RDS master instance.
+
+- **aws_db_subnet_group "database_subnet"**: This resource defines the database subnet group for the RDS instances. It specifies the name and the subnet IDs of the private subnets where the RDS instances will be deployed.
+
+- **data "aws_kms_key" "by_id"**: This data source retrieves information about a specific AWS Key Management Service (KMS) key. It is used to obtain the ARN of the KMS key associated with the Customer-Managed Key (CMK) used for encrypting the RDS instance.
+
+- **aws_db_instance "rds_master"**: This resource creates the master RDS instance. It specifies the identifier, allocated storage, database engine, engine version, instance class, database name, username, password, KMS key ID, backup retention period, availability zone, subnet group name, security group ID, and other configuration options. It tags the RDS instance as `my-rds-master`.
+
+- **aws_db_instance "rds_replica"**: This resource creates the replica RDS instance. It specifies the replicate source DB (the identifier of the master RDS instance), instance class, identifier, allocated storage, skip final snapshot flag, multi-AZ deployment, availability zone, security group ID, storage encryption, and tags. It tags the RDS instance as `my-rds-replica`.
+
+
+create `install_script.sh` file with the bellow content
+
+```
+#!/bin/bash
+
+#install docker 
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+sudo apt  install docker-compose -y
+sudo systemctl enable docker
+sudo systemctl start docker
+
+sudo echo ${aws_db_instance.rds_master.password} | sudo tee /root/db_password.txt > /dev/null
+sudo echo ${aws_db_instance.rds_master.username} | sudo tee /root/db_username.txt > /dev/null
+sudo echo ${aws_db_instance.rds_master.endpoint} | sudo tee /root/db_endpoint.txt > /dev/null
+# create docker-compose
+sudo cat <<EOF | sudo tee docker-compose.yml > /dev/null
+version: '3'
+
+services:
+  wordpress:
+   image: wordpress:4.8-apache
+   ports:
+    - 80:80
+   environment:
+     WORDPRESS_DB_USER: $(cat /root/db_username.txt)
+     WORDPRESS_DB_HOST: $(cat /root/db_endpoint.txt)
+     WORDPRESS_DB_PASSWORD: $(cat /root/db_password.txt)
+   volumes:
+     - wordpress-data:/var/wwww/html
+
+volumes:
+  wordpress-data:
+EOF
+
+sudo docker-compose up
+```
+
+The `install_script.sh` file is a shell script that installs Docker and Docker-compose, configures a WordPress environment, and launches the application.
