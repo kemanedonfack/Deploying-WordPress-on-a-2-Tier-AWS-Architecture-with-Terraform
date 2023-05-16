@@ -30,3 +30,10 @@ By using a 2-Tier architecture, we can achieve several benefits. Firstly, it all
 
 Additionally, this approach provides greater **flexibility** and **scalability**. In the event of traffic spikes, we can scale only the presentation layer by adding additional web server instances, without impacting the data layer. This ensures optimal performance and a smooth user experience.
 
+## Prerequisites
+
+Before starting the deployment process, make sure you have the following prerequisites in place:
+
+- Basic knowledge of Terraform & AWS
+- Installed AWS CLI
+- Installed Terraform CLI 
