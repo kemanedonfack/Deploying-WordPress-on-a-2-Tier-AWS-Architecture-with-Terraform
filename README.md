@@ -179,3 +179,38 @@ The resources defined in this file are:
 - **aws_internet_gateway**: Adds a gateway to allow the VPC to connect to the internet. The role of this resource is to enable internet connectivity for the VPC, which will be used to provide internet access to the EC2 instances.
 - **aws_subnet**: Defines the subnets that will be used to create the EC2 instances and RDS databases. Two subnets are public for the EC2 instances, while the other two are private for the databases. The role of this resource is to create the subnets for the different resources that will be created in the VPC.
 
+create `route_table.tf` file and add the below content
+
+```
+resource "aws_route_table" "infrastructure_route_table" {
+  vpc_id = aws_vpc.infrastructure_vpc.id
+
+  route {
+    //associated subnet can reach everywhere
+    cidr_block = "0.0.0.0/0"
+    //CRT uses this IGW to reach internet
+    gateway_id = aws_internet_gateway.tier_architecture_igw.id
+  }
+
+}
+
+# attach ec2 1 subnet to an internet gateway
+resource "aws_route_table_association" "route-ec2-1-subnet-to-igw" {
+  subnet_id      = aws_subnet.ec2_1_public_subnet.id
+  route_table_id = aws_route_table.infrastructure_route_table.id
+}
+
+# attach ec2 2 subnet to an internet gateway
+resource "aws_route_table_association" "route-ec2-2-subnet-to-igw" {
+  subnet_id      = aws_subnet.ec2_2_public_subnet.id
+  route_table_id = aws_route_table.infrastructure_route_table.id
+}
+
+```
+
+The `route_table.tf` file contains the configuration for the route table in our 2-tier AWS architecture created with Terraform.
+
+The resources defined in this file are:
+
+- **aws_route_table**: Defines the main route table for the VPC. It specifies that any traffic with a destination CIDR block of "0.0.0.0/0" (which represents all IP addresses) should be routed through the aws_internet_gateway.tier_architecture_igw resource. The role of this resource is to enable internet connectivity for the associated subnets.
+- **aws_route_table_association**: Associates the EC2 subnets with the route table. It specifies that the aws_subnet.ec2_1_public_subnet and aws_subnet.ec2_2_public_subnet subnets should be associated with the aws_route_table.infrastructure_route_table. This association allows the instances in these subnets to access the internet through the configured route. The role of these resources is to establish the routing between the subnets and the internet gateway.
