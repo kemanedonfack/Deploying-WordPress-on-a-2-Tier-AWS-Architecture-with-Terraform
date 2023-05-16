@@ -20,7 +20,7 @@ In this article, we will explore the step-by-step process of deploying WordPress
 
 In the context of the article about deploying WordPress on a 2-Tier AWS architecture with Terraform, here is a concise description of what a 2-Tier architecture is:
 
-A 2-Tier architecture, also known as a two-tier architecture, is a model of IT infrastructure that separates application components into two distinct layers: the presentation layer and the data layer.
+A 2-Tier architecture, also known as a two-tier architecture, is a model of IT infrastructure that separates application components into two distinct layers: `the presentation layer` and `the data layer`.
 
 The presentation layer, also known as the front-end layer, is responsible for the user interface and interaction with end-users. In the case of WordPress, this layer includes the web server that handles HTTP requests and displays website pages to visitors.
 
