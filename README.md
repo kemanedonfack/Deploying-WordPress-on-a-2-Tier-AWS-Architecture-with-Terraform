@@ -301,3 +301,68 @@ The resources defined in this file are:
 
 - **aws_security_group "database-sg"**: This resource defines the security group for the database. It allows inbound traffic on port 3306 from the **production-instance-sg security group**. The egress block allows all outbound traffic.
 
+
+## Step 4: Create Application load balancer
+
+```
+# Creation of application LoadBalancer
+resource "aws_lb" "application_loadbalancer" {
+  name               = "application-loadbalancer"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.production-instance-sg.id]
+  subnets            = [aws_subnet.ec2_2_public_subnet.id, aws_subnet.ec2_1_public_subnet.id]
+}
+
+# Target group for application loadbalancer
+resource "aws_lb_target_group" "target_group_alb" {
+  name     = "target-group-alb"
+  port     = var.target_application_port
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.infrastructure_vpc.id
+}
+
+# attach target group to an instance
+resource "aws_lb_target_group_attachment" "attachment1" {
+  target_group_arn = aws_lb_target_group.target_group_alb.arn
+  target_id        = aws_instance.production_1_instance.id
+  port             = var.target_application_port
+  depends_on = [
+    aws_instance.production_1_instance,
+  ]
+}
+
+# attach target group to an instance
+resource "aws_lb_target_group_attachment" "attachment2" {
+  target_group_arn = aws_lb_target_group.target_group_alb.arn
+  target_id        = aws_instance.production_2_instance.id
+  port             = var.target_application_port
+  depends_on = [
+    aws_instance.production_2_instance,
+  ]
+}
+
+# attach target group to a loadbalancer
+resource "aws_lb_listener" "external-elb" {
+  load_balancer_arn = aws_lb.application_loadbalancer.arn
+  port              = var.target_application_port
+  protocol          = "HTTP"
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group_alb.arn
+  }
+}
+```
+
+The `loadbalancer.tf` file contains the configuration for creating an application load balancer (ALB) using Terraform. It defines the necessary resources to set up the ALB, target groups, and attachments.
+
+The resources defined in this file are:
+
+- **aws_lb "application_loadbalancer"**: This resource creates the application load balancer. It specifies the load balancer's name, type, and whether it is internal or external. The security_groups parameter references the security group ID of the production instances' security group. The subnets parameter specifies the subnets in which the load balancer will be deployed.
+
+- **aws_lb_target_group "target_group_alb"**: This resource defines the target group for the ALB. It specifies the target group's name, port, protocol, and the VPC in which it will be created.
+
+- **aws_lb_target_group_attachment "attachment1" and "attachment2"**: These resources attach the target group to the respective production instances. They specify the target group ARN, target instance ID, and the port to which traffic will be forwarded.
+
+- **aws_lb_listener "external-elb"**: This resource attaches the target group to the load balancer's listener. It specifies the load balancer ARN, port, and protocol. The default_action block defines the action to be performed for incoming requests, which is forwarding to the target group.
+
