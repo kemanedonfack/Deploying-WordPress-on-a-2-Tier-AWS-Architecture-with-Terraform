@@ -47,7 +47,7 @@ First, let's create a `variables.tf` file to store all our variables.
 variable "inbound_port_production_ec2" {
   type        = list(any)
   default     = [22, 80]
-  description = "inbound port allow on production node"
+  description = "inbound port allow on production instance"
 }
 
 variable "db_name" {
@@ -102,3 +102,5 @@ variable "target_application_port" {
 }
 
 ```
+
+The `variables.tf` file is used to define and initialize the Terraform variables required for configuring and deploying the 2-Tier architecture for the WordPress application on AWS. The defined variables include information about **EC2 instances**, **the database**, **ports**, **instance type**, **AMI ID**, **availability zone**, **VPC CIDR**, **subnet CIDRs**, and **target application ports**. These variables can be modified to fit the specific needs of the project.
