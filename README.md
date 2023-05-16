@@ -175,7 +175,7 @@ The `vpc.tf` file contains the definition of the **Virtual Private Cloud (VPC)**
 
 The resources defined in this file are:
 
-**aws_vpc**: Defines the VPC with the CIDR block and the enabled DNS resolution and hostname settings. The role of this resource is to create the main VPC that will be used to host the different EC2 instances and RDS databases.
-**aws_internet_gateway**: Adds a gateway to allow the VPC to connect to the internet. The role of this resource is to enable internet connectivity for the VPC, which will be used to provide internet access to the EC2 instances.
-**aws_subnet**: Defines the subnets that will be used to create the EC2 instances and RDS databases. Two subnets are public for the EC2 instances, while the other two are private for the databases. The role of this resource is to create the subnets for the different resources that will be created in the VPC.
+- **aws_vpc**: Defines the VPC with the CIDR block and the enabled DNS resolution and hostname settings. The role of this resource is to create the main VPC that will be used to host the different EC2 instances and RDS databases.
+- **aws_internet_gateway**: Adds a gateway to allow the VPC to connect to the internet. The role of this resource is to enable internet connectivity for the VPC, which will be used to provide internet access to the EC2 instances.
+- **aws_subnet**: Defines the subnets that will be used to create the EC2 instances and RDS databases. Two subnets are public for the EC2 instances, while the other two are private for the databases. The role of this resource is to create the subnets for the different resources that will be created in the VPC.
 
