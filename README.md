@@ -22,9 +22,9 @@ In the context of the article about deploying WordPress on a 2-Tier AWS architec
 
 A 2-Tier architecture, also known as a two-tier architecture, is a model of IT infrastructure that separates application components into two distinct layers: `the presentation layer` and `the data layer`.
 
-The presentation layer, also known as the front-end layer, is responsible for the user interface and interaction with end-users. In the case of WordPress, this layer includes the web server that handles HTTP requests and displays website pages to visitors.
+- **The presentation layer**: also known as the front-end layer, is responsible for the user interface and interaction with end-users. In the case of WordPress, this layer includes the web server that handles HTTP requests and displays website pages to visitors.
 
-The data layer, also known as the back-end layer, is responsible for data storage and access. For WordPress, this involves managing the database where articles, comments, user information, etc., are stored.
+- **The data layer**: also known as the back-end layer, is responsible for data storage and access. For WordPress, this involves managing the database where articles, comments, user information, etc., are stored.
 
 By using a 2-Tier architecture, we can achieve several benefits. Firstly, it allows for a clear separation of responsibilities between the presentation layer and the data layer, making application management and maintenance easier.
 
