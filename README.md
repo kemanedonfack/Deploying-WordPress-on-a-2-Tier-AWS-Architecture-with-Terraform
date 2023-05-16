@@ -28,8 +28,4 @@ A 2-Tier architecture, also known as a two-tier architecture, is a model of IT i
 
 By using a 2-Tier architecture, we can achieve several benefits. Firstly, it allows for a clear separation of responsibilities between the presentation layer and the data layer, making application management and maintenance easier.
 
-Additionally, this approach provides greater flexibility and scalability. In the event of traffic spikes, we can scale only the presentation layer by adding additional web server instances, without impacting the data layer. This ensures optimal performance and a smooth user experience.
-
-Finally, the 2-Tier architecture helps reduce the risk of data loss. By isolating the data layer, we minimize the chances of interference or damage caused by errors in the presentation layer.
-
-By deploying WordPress on a 2-Tier AWS architecture with Terraform, we can leverage AWS services such as Amazon EC2 for web servers, Amazon RDS for the database, and configure these components in an automated and consistent manner using Terraform. This allows us to achieve a robust and scalable infrastructure for hosting our WordPress site.
+Additionally, this approach provides greater **flexibility** and **scalability**. In the event of traffic spikes, we can scale only the presentation layer by adding additional web server instances, without impacting the data layer. This ensures optimal performance and a smooth user experience.
