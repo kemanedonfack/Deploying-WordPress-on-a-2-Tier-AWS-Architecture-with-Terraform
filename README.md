@@ -520,3 +520,13 @@ sudo docker-compose up
 ```
 
 The `install_script.sh` file is a shell script that installs Docker and Docker-compose, configures a WordPress environment, and launches the application.
+
+
+## Conclusion:
+
+To conclude, deploying WordPress on a 2-Tier AWS architecture with Terraform offers a reliable and scalable solution for hosting your website. This approach allows any team, regardless of their level of Cloud experience, to successfully set up and manage their WordPress application. By leveraging Terraform's infrastructure-as-code capabilities, the deployment process becomes streamlined and repeatable.
+
+However, it is important to emphasize the significance of conducting thorough research and due diligence when selecting the appropriate AWS services and configurations for your specific requirements. Ensuring high availability, fault tolerance, and security should be prioritized during the deployment process.
+
+By following the steps outlined in this article and leveraging the power of AWS and Terraform, you can confidently deploy WordPress on a 2-Tier architecture, benefiting from the scalability and flexibility of the Cloud while maintaining control over your infrastructure.
+
