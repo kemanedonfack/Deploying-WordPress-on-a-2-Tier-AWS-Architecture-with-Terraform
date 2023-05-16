@@ -18,10 +18,11 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo apt  install docker-compose -y
 sudo systemctl enable docker
 sudo systemctl start docker
-echo ${aws_db_instance.rds_master.password} > readme1.txt
-echo ${aws_db_instance.rds_master.username} > readme2.txt
-echo ${aws_db_instance.rds_master.endpoint} > readme3.txt
-# create Dockerfile
+
+sudo echo ${aws_db_instance.rds_master.password} | sudo tee /root/db_password.txt > /dev/null
+sudo echo ${aws_db_instance.rds_master.username} | sudo tee /root/db_username.txt > /dev/null
+sudo echo ${aws_db_instance.rds_master.endpoint} | sudo tee /root/db_endpoint.txt > /dev/null
+# create docker-compose
 sudo cat <<EOF | sudo tee docker-compose.yml > /dev/null
 version: '3'
 
@@ -31,9 +32,9 @@ services:
    ports:
     - 80:80
    environment:
-     WORDPRESS_DB_USER: ${aws_db_instance.rds_master.username}
-     WORDPRESS_DB_HOST: ${aws_db_instance.rds_master.endpoint}
-     WORDPRESS_DB_PASSWORD: ${aws_db_instance.rds_master.password}
+     WORDPRESS_DB_USER: $(cat /root/db_username.txt)
+     WORDPRESS_DB_HOST: $(cat /root/db_endpoint.txt)
+     WORDPRESS_DB_PASSWORD: $(cat /root/db_password.txt)
    volumes:
      - wordpress-data:/var/wwww/html
 
@@ -42,10 +43,3 @@ volumes:
 EOF
 
 sudo docker-compose up
-
-# install terraform
-
-# wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-# sudo apt update && sudo apt install terraform
-

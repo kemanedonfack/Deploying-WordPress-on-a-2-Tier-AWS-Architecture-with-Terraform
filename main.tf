@@ -62,21 +62,21 @@ resource "aws_db_instance" "rds_master" {
   }
 }
 
-# resource "aws_db_instance" "rds_replica" {
+resource "aws_db_instance" "rds_replica" {
 
-#   replicate_source_db    = aws_db_instance.rds_master.identifier
-#   instance_class         = "db.t3.micro"
-#   identifier             = "replica-rds-instance"
-#   allocated_storage      = 10
-#   skip_final_snapshot    = true
-#   multi_az               = false
-#   availability_zone      = var.availability_zone[1]
-#   vpc_security_group_ids = [aws_security_group.database-sg.id]
-#   storage_encrypted      = true
+  replicate_source_db    = aws_db_instance.rds_master.identifier
+  instance_class         = "db.t3.micro"
+  identifier             = "replica-rds-instance"
+  allocated_storage      = 10
+  skip_final_snapshot    = true
+  multi_az               = false
+  availability_zone      = var.availability_zone[1]
+  vpc_security_group_ids = [aws_security_group.database-sg.id]
+  storage_encrypted      = true
 
-#   tags = {
-#     Name = "my-rds-replica"
-#   }
+  tags = {
+    Name = "my-rds-replica"
+  }
 
-# }
+}
 
