@@ -1,10 +1,10 @@
-#Create a security  group for production node to allow traffic on port 22 and 9090
+#Create a security  group for production node to allow traffic 
 resource "aws_security_group" "production-instance-sg" {
   name        = "production-instance-sg"
   description = "Security from who allow inbound traffic on port 22 and 9090"
   vpc_id      = aws_vpc.infrastructure_vpc.id
 
-  # dynamic block who create two rules to allow inbound traffic on port 22 and 8080
+  # dynamic block who create two rules to allow inbound traffic 
   dynamic "ingress" {
     for_each = var.inbound_port_production_ec2
     content {

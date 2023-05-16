@@ -1,7 +1,7 @@
 variable "inbound_port_production_ec2" {
   type        = list(any)
   default     = [22, 80]
-  description = "inbound port allow on production node"
+  description = "inbound port allow on production instance"
 }
 
 variable "db_name" {
@@ -15,8 +15,8 @@ variable "db_user" {
 }
 
 variable "db_password" {
-  type      = string
-  default   = "Kemane-AWS2023"
+  type    = string
+  default = "Kemane-AWS2023"
 }
 
 variable "instance_type" {

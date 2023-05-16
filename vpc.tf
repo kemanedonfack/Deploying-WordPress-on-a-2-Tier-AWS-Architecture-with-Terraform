@@ -17,7 +17,7 @@ resource "aws_internet_gateway" "tier_architecture_igw" {
   }
 }
 
-#first ec2 node public subnet
+#first ec2 instance public subnet
 resource "aws_subnet" "ec2_1_public_subnet" {
   vpc_id                  = aws_vpc.infrastructure_vpc.id
   cidr_block              = var.subnet_cidrs[1]
@@ -27,7 +27,8 @@ resource "aws_subnet" "ec2_1_public_subnet" {
     Name = "first ec2 public subnet"
   }
 }
-#second ec2 node public subnet
+
+#second ec2 instance public subnet
 resource "aws_subnet" "ec2_2_public_subnet" {
   vpc_id                  = aws_vpc.infrastructure_vpc.id
   cidr_block              = var.subnet_cidrs[2]
@@ -42,7 +43,7 @@ resource "aws_subnet" "ec2_2_public_subnet" {
 resource "aws_subnet" "database_private_subnet" {
   vpc_id                  = aws_vpc.infrastructure_vpc.id
   cidr_block              = var.subnet_cidrs[4]
-  map_public_ip_on_launch = "false"
+  map_public_ip_on_launch = "false" //it makes this a private subnet
   availability_zone       = var.availability_zone[2]
   tags = {
     Name = "database private subnet"
