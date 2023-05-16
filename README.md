@@ -104,3 +104,78 @@ variable "target_application_port" {
 ```
 
 The `variables.tf` file is used to define and initialize the Terraform variables required for configuring and deploying the 2-Tier architecture for the WordPress application on AWS. The defined variables include information about **EC2 instances**, **the database**, **ports**, **instance type**, **AMI ID**, **availability zone**, **VPC CIDR**, **subnet CIDRs**, and **target application ports**. These variables can be modified to fit the specific needs of the project.
+
+create `vpc.tf` file and add the below content
+
+```
+resource "aws_vpc" "infrastructure_vpc" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = "true" #gives you an internal domain name
+  enable_dns_hostnames = "true" #gives you an internal host name
+  instance_tenancy     = "default"
+
+  tags = {
+    Name = "2-tier-architecture-vpc"
+  }
+}
+
+#It enables our vpc to connect to the internet
+resource "aws_internet_gateway" "tier_architecture_igw" {
+  vpc_id = aws_vpc.infrastructure_vpc.id
+  tags = {
+    Name = "2-tier-architecture-igw"
+  }
+}
+
+#first ec2 instance public subnet
+resource "aws_subnet" "ec2_1_public_subnet" {
+  vpc_id                  = aws_vpc.infrastructure_vpc.id
+  cidr_block              = var.subnet_cidrs[1]
+  map_public_ip_on_launch = "true" //it makes this a public subnet
+  availability_zone       = var.availability_zone[1]
+  tags = {
+    Name = "first ec2 public subnet"
+  }
+}
+
+#second ec2 instance public subnet
+resource "aws_subnet" "ec2_2_public_subnet" {
+  vpc_id                  = aws_vpc.infrastructure_vpc.id
+  cidr_block              = var.subnet_cidrs[2]
+  map_public_ip_on_launch = "true" //it makes this a public subnet
+  availability_zone       = var.availability_zone[2]
+  tags = {
+    Name = "second ec2 public subnet"
+  }
+}
+
+#database private subnet
+resource "aws_subnet" "database_private_subnet" {
+  vpc_id                  = aws_vpc.infrastructure_vpc.id
+  cidr_block              = var.subnet_cidrs[4]
+  map_public_ip_on_launch = "false" //it makes this a private subnet
+  availability_zone       = var.availability_zone[2]
+  tags = {
+    Name = "database private subnet"
+  }
+}
+
+#database read replica private subnet
+resource "aws_subnet" "database_read_replica_private_subnet" {
+  vpc_id                  = aws_vpc.infrastructure_vpc.id
+  cidr_block              = var.subnet_cidrs[3]
+  map_public_ip_on_launch = "false"
+  availability_zone       = var.availability_zone[1]
+  tags = {
+    Name = "database read replica private subnet"
+  }
+}
+```
+The `vpc.tf` file contains the definition of the **Virtual Private Cloud (VPC)** where the infrastructure resources will be created for our 2-tier AWS architecture using Terraform.
+
+The resources defined in this file are:
+
+**aws_vpc**: Defines the VPC with the CIDR block and the enabled DNS resolution and hostname settings. The role of this resource is to create the main VPC that will be used to host the different EC2 instances and RDS databases.
+**aws_internet_gateway**: Adds a gateway to allow the VPC to connect to the internet. The role of this resource is to enable internet connectivity for the VPC, which will be used to provide internet access to the EC2 instances.
+**aws_subnet**: Defines the subnets that will be used to create the EC2 instances and RDS databases. Two subnets are public for the EC2 instances, while the other two are private for the databases. The role of this resource is to create the subnets for the different resources that will be created in the VPC.
+
