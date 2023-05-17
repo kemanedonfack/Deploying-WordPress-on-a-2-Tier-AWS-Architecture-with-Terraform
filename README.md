@@ -556,11 +556,11 @@ The `output.tf` file is a Terraform file that defines the outputs of the resourc
 Specifically, this file defines the following outputs:
 
 - **public_1_ip**: the public IP address of the first instance created in AWS.
-**public_2_ip**: the public IP address of the second instance created in AWS.
-**rds_endpoint**: the endpoint of the RDS database instance created in AWS.
-**rds_username**: the username of the RDS database created in AWS.
-**rds_name**: the name of the RDS database created in AWS.
-**lb_dns_name**: the DNS domain name of the application load balancer created in AWS.
+- **public_2_ip**: the public IP address of the second instance created in AWS.
+- **rds_endpoint**: the endpoint of the RDS database instance created in AWS.
+- **rds_username**: the username of the RDS database created in AWS.
+- **rds_name**: the name of the RDS database created in AWS.
+- **lb_dns_name**: the DNS domain name of the application load balancer created in AWS.
 These outputs can be used for various tasks, such as connecting to the RDS database instance or accessing the application via the application load balancer.
 
 
