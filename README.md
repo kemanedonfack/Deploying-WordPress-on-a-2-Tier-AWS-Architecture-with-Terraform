@@ -581,9 +581,9 @@ To generate the plan, execute the following command:
 terraform plan
 ```
 
-![terraform-plan](./images/terraform-plan-1.png)
-
 ![terraform-plan](./images/terraform-plan-2.png)
+
+![terraform-plan](./images/terraform-plan-1.png)
 
 Once we are satisfied with the execution plan, we can proceed with deploying our infrastructure on AWS. Terraform will provision the necessary resources and configure them according to our specifications.
 
