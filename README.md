@@ -62,8 +62,8 @@ The `provider.tf` file is used to configure the AWS provider for Terraform, spec
 
 The resources defined in this file are:
 
-provider "aws": Specifies the AWS provider for Terraform. It sets the region to "eu-north-1", indicating that the resources will be provisioned in the AWS EU (Stockholm) region. The role of this resource is to authenticate Terraform with the specified AWS region and allow it to manage AWS resources.
-terraform block: Defines the required providers for the Terraform configuration. In this case, it specifies that the "aws" provider is required, with a specific version of "4.65.0". The role of this block is to ensure that the correct version of the AWS provider is used for the configuration.
+- **provider "aws"**: Specifies the AWS provider for Terraform. It sets the region to "eu-north-1", indicating that the resources will be provisioned in the AWS EU (Stockholm) region. The role of this resource is to authenticate Terraform with the specified AWS region and allow it to manage AWS resources.
+- **terraform block**: Defines the required providers for the Terraform configuration. In this case, it specifies that the "aws" provider is required, with a specific version of "4.65.0". The role of this block is to ensure that the correct version of the AWS provider is used for the configuration.
 
 ## Step 2: Create VPC and subnets
 
