@@ -561,7 +561,8 @@ Specifically, this file defines the following outputs:
 - **rds_username**: the username of the RDS database created in AWS.
 - **rds_name**: the name of the RDS database created in AWS.
 - **lb_dns_name**: the DNS domain name of the application load balancer created in AWS.
-These outputs can be used for various tasks, such as connecting to the RDS database instance or accessing the application via the application load balancer.
+
+These outputs will be used to connect to the RDS database instance and accessing the application via the application load balancer.
 
 
 ## Conclusion:
