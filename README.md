@@ -566,6 +566,31 @@ Specifically, this file defines the following outputs:
 
 These outputs will be used to connect to the RDS database instance and accessing the application via the application load balancer.
 
+## Step 6: Deploy our Infrastructure
+
+To start the deployment process, we need to initialize Terraform in our project directory. This step ensures that Terraform downloads the necessary providers and sets up the backend configuration. Run the following command in your terminal:
+```
+terraform init
+```
+After initializing Terraform, we can generate an execution plan to preview the changes that will be made to our AWS infrastructure. The plan provides a detailed overview of the resources that will be created, modified, or destroyed.
+
+To generate the plan, execute the following command:
+```
+terraform plan
+```
+Once we are satisfied with the execution plan, we can proceed with deploying our infrastructure on AWS. Terraform will provision the necessary resources and configure them according to our specifications.
+
+To deploy the infrastructure, run the following command:
+```
+terraform apply
+```
+Terraform will prompt for confirmation before proceeding with the deployment. Type `yes` and press Enter to continue.
+
+The deployment process will take some time. Terraform will display the progress and status of each resource being created.
+
+Once the deployment is complete, Terraform will output the information about the provisioned resources, such as the IP addresses, DNS names, RDS endpoint, user and database name.
+
+**Congratulations! You have successfully deployed your WordPress application on a 2-tier AWS architecture using Terraform**. You can now access your WordPress website and start customizing it to suit your needs.
 
 ## Conclusion:
 
