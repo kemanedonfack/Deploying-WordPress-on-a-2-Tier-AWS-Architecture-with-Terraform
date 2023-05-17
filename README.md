@@ -593,9 +593,30 @@ terraform apply
 ```
 Terraform will prompt for confirmation before proceeding with the deployment. Type `yes` and press Enter to continue.
 
+
+![terraform-apply](./images/terraform-apply-1.png)
+
 The deployment process will take some time. Terraform will display the progress and status of each resource being created.
 
+![terraform-apply](./images/terraform-apply-2.png)
+
 Once the deployment is complete, Terraform will output the information about the provisioned resources, such as the IP addresses, DNS names, RDS endpoint, user and database name.
+
+![outputs](./images/outputs.png)
+
+Now let's check our infrastructure
+
+![vpc](./images/vpc.png)
+
+![instance](./images/instance.png)
+
+![database](./images/databases.png)
+
+![security](./images/security.png)
+
+![loadbalancer](./images/loadbalancer.png)
+
+![wordpress](./images/wordpress.png)
 
 **Congratulations! You have successfully deployed your WordPress application on a 2-tier AWS architecture using Terraform**. You can now access your WordPress website and start customizing it to suit your needs.
 
