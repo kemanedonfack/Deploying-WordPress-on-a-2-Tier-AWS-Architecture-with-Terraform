@@ -521,6 +521,48 @@ sudo docker-compose up
 
 The `install_script.sh` file is a shell script that installs Docker and Docker-compose, configures a WordPress environment, and launches the application.
 
+create `outputs.tf` file with the bellow content
+
+```
+output "public_1_ip" {
+  value = aws_instance.production_1_instance.public_ip
+}
+
+output "public_2_ip" {
+  value = aws_instance.production_2_instance.public_ip
+}
+
+output "rds_endpoint" {
+  value = aws_db_instance.rds_master.endpoint
+}
+
+output "rds_username" {
+  value = aws_db_instance.rds_master.username
+}
+
+
+output "rds_name" {
+  value = aws_db_instance.rds_master.db_name
+}
+
+# print the DNS of load balancer
+output "lb_dns_name" {
+  description = "The DNS name of the load balancer"
+  value       = aws_lb.application_loadbalancer.dns_name
+}
+```
+The `output.tf` file is a Terraform file that defines the outputs of the resources created in the code.
+
+Specifically, this file defines the following outputs:
+
+- **public_1_ip**: the public IP address of the first instance created in AWS.
+**public_2_ip**: the public IP address of the second instance created in AWS.
+**rds_endpoint**: the endpoint of the RDS database instance created in AWS.
+**rds_username**: the username of the RDS database created in AWS.
+**rds_name**: the name of the RDS database created in AWS.
+**lb_dns_name**: the DNS domain name of the application load balancer created in AWS.
+These outputs can be used for various tasks, such as connecting to the RDS database instance or accessing the application via the application load balancer.
+
 
 ## Conclusion:
 
