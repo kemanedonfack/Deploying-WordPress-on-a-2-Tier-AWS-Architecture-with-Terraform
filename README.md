@@ -572,12 +572,19 @@ To start the deployment process, we need to initialize Terraform in our project 
 ```
 terraform init
 ```
+![terraform-init](./images/terraform-init.png)
+
 After initializing Terraform, we can generate an execution plan to preview the changes that will be made to our AWS infrastructure. The plan provides a detailed overview of the resources that will be created, modified, or destroyed.
 
 To generate the plan, execute the following command:
 ```
 terraform plan
 ```
+
+![terraform-plan](./images/terraform-plan-1.png)
+
+![terraform-plan](./images/terraform-plan-2.png)
+
 Once we are satisfied with the execution plan, we can proceed with deploying our infrastructure on AWS. Terraform will provision the necessary resources and configure them according to our specifications.
 
 To deploy the infrastructure, run the following command:
