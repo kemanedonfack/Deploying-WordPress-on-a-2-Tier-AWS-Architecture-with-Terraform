@@ -6,37 +6,32 @@ variable "inbound_port_production_ec2" {
 
 variable "db_name" {
   type    = string
-  default = "kemanedonfack"
+  default = "wordpressdb"
 }
 
 variable "db_user" {
   type    = string
-  default = "kemane"
+  default = "admin"
 }
 
 variable "db_password" {
   type    = string
-  default = "Kemane-AWS2023"
+  default = "Wordpress-AWS2Tier"
 }
 
 variable "instance_type" {
   type    = string
-  default = "t3.micro"
+  default = "t2.micro"
 }
 
 variable "ami" {
   type    = string
-  default = "ami-0cf13cb849b11b451"
-}
-
-variable "key_name" {
-  type    = string
-  default = "kemane"
+  default = "ami-0cbfa6bba4589dcbb"
 }
 
 variable "availability_zone" {
   type    = list(string)
-  default = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
+  default = ["ca-central-1a", "ca-central-1b", "ca-central-1d"]
 }
 
 variable "vpc_cidr" {
@@ -53,4 +48,15 @@ variable "subnet_cidrs" {
 variable "target_application_port" {
   type    = string
   default = "80"
+}
+
+variable "private_key_location" {
+  description = "Location of the private key"
+  type        = string
+  default     = "aws_access_key.pem"
+}
+
+variable "mount_directory" {
+  type    = string
+  default = "/var/www/html"
 }
